@@ -42,7 +42,7 @@ db = pymongo.MongoClient(args.client)[args.database]
 bulk = db[args.collection_name].initialize_ordered_bulk_op()
 
 # Ensure that an index is in place for the variable being used for age
-db.create_index(args.age_variable)
+db[args.collection_name].create_index(args.age_variable)
 
 # Find all Under a year old
 bulk.find({args.age_variable:{"$lt":1}}).update({"$set":{args.bin_variable:"<1"}})

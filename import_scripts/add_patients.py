@@ -31,6 +31,7 @@ import codecs
 import pymongo
 import argparse
 import datetime
+import subprocess
 
 # Input argument parsing
 parser = argparse.ArgumentParser(description='Process command line arguments')
@@ -87,7 +88,6 @@ collection = 'db.'+args.collection_name
 
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
-import subprocess
 num_lines = subprocess.check_output(['wc', '-l', filename]).split(" ")[0]
 print "\t\tImporting", num_lines, "lines..."
 
@@ -99,7 +99,7 @@ imported_file_count = 0
 posts=[]
 
 # Read in the htm file with the headers
-with codecs.open(path + args.file_name+".DAT","rb",encoding="utf-8",errors="ignore") as f:
+with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
     reader = csv.reader(f, delimiter='\t', quotechar='"')
     
     # Find the person identifier item in headers, this is the unique ID

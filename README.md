@@ -10,15 +10,17 @@ Performing the installation requires the following components:
 	* argparse
     * codecs
     * pandas
-* transplant2mongo repository
+* transplant2mongos.tar.gz
 * UNOS STAR File data (this must be obtained directly through UNOS and the OPTN).
 
 ## Setup Instructions
 The following items are basic instructions for setting up your system and environment for importing the UNOS Star files into MongoDB.
 
-1. Clone the transplant2mongo directory.
+1. Obtain tarball after making request at [url].
 
-2. Move to transplant2mongo
+2. Untar transplant2mongo.tar.gz
+
+3. Move into the transplant2mongo directory
 ```
 cd transplant2mongo
 ```
@@ -38,4 +40,4 @@ Christine Harvey, The MITRE Corporation (ceharvey@mitre.org / ceharvs@gmail.com)
 
 Approved for Public Release; Distribution Unlimited. Case Number 16-2039.
 
-©2016 The MITRE Corporation. ALL RIGHTS RESERVED.
+(C)2016 The MITRE Corporation. ALL RIGHTS RESERVED.

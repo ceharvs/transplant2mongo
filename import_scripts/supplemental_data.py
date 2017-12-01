@@ -41,6 +41,7 @@ import codecs
 import pymongo
 import datetime
 import argparse
+import subprocess
 
 # Parse in the input arguments
 parser = argparse.ArgumentParser(description='Process command line inputs')
@@ -105,12 +106,11 @@ db[args.collection_name].ensure_index(args.unique_ID)
 
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
-import subprocess
-lines = subprocess.call(['wc', '-l', filename])
-print "LINESSSSS", lines
+num_lines = subprocess.check_output(['wc', '-l', filename]).split(" ")[0]
+print "\t\tImporting", num_lines, "lines..."
 
 # Read in the htm file with the headers
-with codecs.open(path+args.file_name+".DAT","rb",encoding="utf-8",errors="ignore") as f:
+with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
     reader = csv.reader(f, delimiter='\t', quotechar='"', escapechar="\n")
     
     # Send the first line to an array of headers
@@ -177,5 +177,4 @@ with codecs.open(path+args.file_name+".DAT","rb",encoding="utf-8",errors="ignore
 if lines_read % 500 != 0:
     result = bulk.execute()
 
-print args.file_name + " data has been successfully imported to the " + \
-    args.collection_name + " database!"
+print "\t\t", lines_read, "lines of data have been imported"

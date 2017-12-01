@@ -1,42 +1,32 @@
 # Path to the "Delimited Test File" directory for the UNOS data
-ORIGINAL_UNOS_DATA="<path_to_UNOS_data>/Delimited\ Test\ File\ 201406/Delimited\ Test\ File/"
+ORIGINAL_UNOS_DATA="/mnt/project/organ/ref/Delimited Text File 201503/Delimited Text File/"
 
 # Path to localized working directory for the data
-DIRECTORY="/mnt/project/organ/test/organ_data_201503"
+LINKED_DIRECTORY="/mnt/project/organ/test/organ_data_link"
 
 # Generate a symbolic link between the original UNOS data and the working data
-ln -s $ORIGINAL_UNOS_DATA $DIRECTORY
+ln -s "$ORIGINAL_UNOS_DATA" $LINKED_DIRECTORY
 
 # Describe the client and the database to be used.
 CLIENT="organ-db.etlab.mitre.org"
-DB="organs_201503"
+DB="organs_201503_test_11292017"
+
+# Make a temporary storage folder for the data
+mkdir data
 
 # Import Donor Information
-sh transplant2mongo/import_scripts/donor_ops.sh $DIRECTORY $CLIENT $DB
-# Add Age groups to the donors in the Database
-python import_scripts/age_groups.py $CLIENT $DB Living_Donor AGE_DON AGE_BIN
-python import_scripts/age_groups.py $CLIENT $DB Deceased_Donor AGE_DON AGE_BIN
+sh import_scripts/donor_ops.sh $LINKED_DIRECTORY $CLIENT $DB
 
 # Import Intestine Information
-sh transplant2mongo/import_scripts/intestine_ops.sh $DIRECTORY $CLIENT $DB
-# Add age groupings to the documents in the database
-python import_scripts/age_groups.py $CLIENT $DB Intestine INIT_AGE INIT_AGE_BIN
-python import_scripts/age_groups.py $CLIENT $DB Intestine AGE AGE_BIN
+sh import_scripts/intestine_ops.sh $LINKED_DIRECTORY $CLIENT $DB
 
 # Import Liver Information
-sh transplant2mongo/import_scripts/liver_ops.sh $DIRECTORY $CLIENT $DB
-# Add age groupings to the documents in the database
-python import_scripts/age_groups.py $CLIENT $DB Liver INIT_AGE INIT_AGE_BIN
-python import_scripts/age_groups.py $CLIENT $DB Liver AGE AGE_BIN
+sh import_scripts/liver_ops.sh $LINKED_DIRECTORY $CLIENT $DB
 
 # Import Thoracic Information
-sh transplant2mongo/import_scripts/thoracic_ops.sh $DIRECTORY $CLIENT $DB
-# Add age groupings to the documents in the database
-python import_scripts/age_groups.py $CLIENT $DB Thoracic INIT_AGE INIT_AGE_BIN
-python import_scripts/age_groups.py $CLIENT $DB Thoracic AGE AGE_BIN
+sh import_scripts/thoracic_ops.sh $LINKED_DIRECTORY $CLIENT $DB
 
 # Import Kidney/Pancreas Information
-sh transplant2mongo/import_scripts/kidpan_ops.sh $DIRECTORY $CLIENT $DB
-# Add age groupings to the documents in the database
-python import_scripts/age_groups.py $CLIENT $DB Kidney_Pancreas INIT_AGE INIT_AGE_BIN
-python import_scripts/age_groups.py $CLIENT $DB Kidney_Pancreas AGE AGE_BIN
+sh import_scripts/kidpan_ops.sh $LINKED_DIRECTORY $CLIENT $DB
+
+rm -rf data/
