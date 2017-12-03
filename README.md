@@ -3,13 +3,7 @@
 ## Requirements
 Performing the installation requires the following components:
 * [MongoDB](https://docs.mongodb.com/manual/tutorial/)
-* Python 2.7.\*
-	* pymongo
-	* csv
-	* datetime
-	* argparse
-    * codecs
-    * pandas
+* Python 2.7.\* and packages: pymongo, csv, datetime, argparse, codecs, pandas.
 * UNOS STAR File data (this must be obtained directly through UNOS and the OPTN).
 
 ## Setup Instructions
