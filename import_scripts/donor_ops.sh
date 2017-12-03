@@ -32,7 +32,7 @@ echo -e "\t -Parsing Living Donor data and inserting into MongoDB..."
 python import_scripts/add_patients.py $CLIENT $DB LIVING_DONOR_DATA Living_Donor -u DONOR_ID
 
 # Run the Python code to generate the json and save to a file
-echo -e "\t- Parsing Follow-Up data for Deceased Donors and inserting into MongoDB..."
+echo -e "\t- Parsing Follow-Up data for Living Donors and inserting into MongoDB..."
 python import_scripts/supplemental_data.py $CLIENT $DB LIVING_DONOR_FOLLOWUP_DATA Living_Donor_Follow Living_Donor DONOR_ID -m
 
 # Remove files
