@@ -1,8 +1,8 @@
 # Path to the "Delimited Test File" directory for the UNOS data
-ORIGINAL_UNOS_DATA="sample-data/Delimited Text File/"
+ORIGINAL_UNOS_DATA=sample-data/Delimited Text File/
 
 # Path to localized working directory for the data
-LINKED_DIRECTORY="organ_data_link"
+LINKED_DIRECTORY=organ_data_link
 
 # Describe the client and the database to be used.
 CLIENT="localhost"
@@ -11,7 +11,7 @@ DB="organs_data_12012017"
 all: prep donors 
 
 prep:
-	- drop db
+	- mongo $CLIENT.$DB --eval "db.dropDatabase()"
 	- ln -s "$(ORIGINAL_UNOS_DATA)" $(LINKED_DIRECTORY)
 	- mkdir data
 
