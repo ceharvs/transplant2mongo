@@ -88,8 +88,8 @@ collection = 'db.'+args.collection_name
 
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
-num_lines = subprocess.check_output(['wc', '-l', filename]).split(" ")[0]
-print "\t\tImporting", num_lines, "lines..."
+num_lines = subprocess.check_output(['wc', '-l', filename]).split(filename)[0].strip()
+print "\tImporting", num_lines, "lines..."
 
 # Import from the header file
 header = import_header()
@@ -143,4 +143,4 @@ with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
 #result = bulk.execute()
 db[args.collection_name].insert(posts)
 imported_file_count += len(posts)
-print "\t\t", imported_file_count, "lines of data have been imported"
+print "\t", imported_file_count, "lines of data have been imported"
