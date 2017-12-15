@@ -18,7 +18,7 @@ mkdir data
 sh import_scripts/donor_ops.sh $LINKED_DIRECTORY $CLIENT $DB
 
 # Import Intestine Information
-sh import_scripts/intestine_ops.sh $LINKED_DIRECTORY $CLIENT $DB
+#sh import_scripts/intestine_ops.sh $LINKED_DIRECTORY $CLIENT $DB
 
 # Import Liver Information
 #sh import_scripts/liver_ops.sh $LINKED_DIRECTORY $CLIENT $DB
