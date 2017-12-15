@@ -15,18 +15,18 @@ git clone https://github.com/ceharvs/transplant2mongo/
 cd transplant2mongo
 ```
 
-Edit `populate.sh` to:
+Edit `Makefile` to:
 * Specify location of database client, data source, and database name
-* Comment out import scripts for data that you do not have
+* Specify the COMPONENTS (decesed donor, thoracic, liver, etc.) that need to be imported, base this off of the files you have access to
 
-Execute `populate.sh` to populate MongoDB
+Run the Makefile to populate the database
 ```
-sh populate.sh
+make all
 ```
 
 ## Test
 
-To test the import, ...
+To test the import, use the default settings for the sample data set.
 
 ## Author Information
 
