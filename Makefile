@@ -8,7 +8,7 @@ LINKED_DIRECTORY=organ_data_link
 # Describe the client and the database to be used.
 # Edit this section if you do not want to use the default database
 CLIENT=localhost
-DB=organs_data_12012017
+DB=organ_data
 
 # Define the database components to be made
 # Options include: deceased living intestine kidpan liver thoracic

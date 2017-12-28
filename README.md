@@ -26,7 +26,16 @@ make all
 
 ## Test
 
-To test the import, use the default settings for the sample data set.
+To test the import, use the default settings for the sample data set.  Once all of the sample data has been loaded, try running the following python script:
+```
+python test_database.py localhost organ_data Deceased_Donor DONOR_ID 4
+```
+You should get the following output:
+```
+{u'AGE_BIN': u'18-34', u'HOME_STATE_DON': u'TN', u'AGE_DON': 32, u'GENDER_DON': u'M', u'ABO': u'O', u'DONOR_ID': 4, u'Inotropic_Meds': {u'MEDICATION': u'Medicine A'}, u'_id': u'4'}
+
+```
+
 
 ## Author Information
 
