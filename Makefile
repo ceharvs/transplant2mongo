@@ -141,7 +141,7 @@ kidpan:
 	@echo "Beginning Kiney and Pancreas Data Import"
 
 	@echo "- Copying over data from files to local directory..."
-	@cp -r "$(LINKED_DIRECTORY)"/Kidney_Pancreas_Kidney-Pancreas/* data/.
+	@cp -r "$(LINKED_DIRECTORY)"/"Kidney_ Pancreas_ Kidney-Pancreas"/* data/.
 
 	@echo "- Flattening data files..."
 	@mv data/*/** data/.
