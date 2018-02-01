@@ -1,6 +1,6 @@
 # Guide for Transplant2Mongo
 
-This Tool allows users to import data from UNOS STAR file to MongoDB using Python.  This tool was developed using OPTN STAR file data as of June 2014 and March 2015.
+This Tool allows users to import data from UNOS STAR files to MongoDB using Python.  This tool was developed using OPTN STAR file data as of June 2014 and March 2015.
 
 ## Requirements
 Performing the installation requires the following components:
