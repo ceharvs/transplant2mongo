@@ -17,9 +17,13 @@ git clone https://github.com/ceharvs/transplant2mongo/
 cd transplant2mongo
 ```
 
+Make sure MongoDB is running on your system:
+
+#TODO Insert intructions on running MongoDB here
+
 Edit `Makefile` to:
 * Specify location of database client, data source, and database name
-* Specify the COMPONENTS (decesed donor, thoracic, liver, etc.) that need to be imported, base this off of the files you have access to
+* Specify the COMPONENTS (deceased donor, thoracic, liver, etc.) that need to be imported, base this off of the files you have access to
 
 Run the Makefile to populate the database
 ```
@@ -30,10 +34,9 @@ make all
 
 To test the import, use the default settings for the sample data set.  Once all of the sample data has been loaded, try running the following python script:
 ```
-python test_database.py localhost organ_data Deceased_Donor DONOR_ID 4
+python test_database.py localhost organ_data Deceased_Donor DONOR_ID 8
 ```
 You should get the following output:
-#TODO Fix THIS Query for the sample
 ```
 {u'AGE_BIN': u'18-34', u'HOME_STATE_DON': u'TN', u'AGE_DON': 32, u'GENDER_DON': u'M', u'ABO': u'O', u'DONOR_ID': 4, u'Inotropic_Meds': {u'MEDICATION': u'Medicine A'}, u'_id': u'4'}
 
