@@ -109,8 +109,8 @@ db[args.collection_name].ensure_index(args.unique_ID)
 
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
-num_lines = subprocess.check_output(['wc', '-l', filename]).split(filename)[0].strip()
-print "\tImporting", num_lines, "lines..."
+num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
+print("\tImporting", num_lines, "lines...")
 
 # Read in the htm file with the headers
 with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:

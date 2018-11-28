@@ -89,7 +89,7 @@ collection = 'db.'+args.collection_name
 
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
-num_lines = subprocess.check_output(['wc', '-l', filename]).split(filename)[0].strip()
+num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
 print("\tImporting", num_lines, "lines...")
 
 # Import from the header file
