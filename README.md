@@ -5,7 +5,7 @@ This Tool allows users to import data from UNOS STAR files to MongoDB using Pyth
 ## Requirements
 Performing the installation requires the following components:
 * [MongoDB](https://docs.mongodb.com/manual/tutorial/)
-* Python 2.7.\* and packages: pymongo, csv, datetime, argparse, codecs, pandas.
+* Python 3.6.\* and packages: pymongo, csv, datetime, argparse, codecs, pandas, and tk (for GUI use).
 * UNOS STAR File data (this must be obtained directly through UNOS and the OPTN).
 
 ## Setup Instructions
@@ -33,6 +33,7 @@ To test the import, use the default settings for the sample data set.  Once all 
 python test_database.py localhost organ_data Deceased_Donor DONOR_ID 4
 ```
 You should get the following output:
+#TODO Fix THIS Query for the sample
 ```
 {u'AGE_BIN': u'18-34', u'HOME_STATE_DON': u'TN', u'AGE_DON': 32, u'GENDER_DON': u'M', u'ABO': u'O', u'DONOR_ID': 4, u'Inotropic_Meds': {u'MEDICATION': u'Medicine A'}, u'_id': u'4'}
 
