@@ -66,34 +66,37 @@ args=parser.parse_args()
 # Specify the path to the data file
 path = 'data/'
 
+
 def clean_string(string):
     """Clean string and replace unnecessary values"""
     # Replace unnecessary apostrophes
-    string = string.replace("'","")
+    string = string.replace("'", "")
     # Replace random tabs
-    string = string.replace("\t","")
+    string = string.replace("\t", "")
     # Replace random \ marks
-    string = string.replace("\\","")
+    string = string.replace("\\", "")
     # Replace <> marks
-    string = string.replace("<","").replace(">","")
+    string = string.replace("<", "").replace(">", "")
     return string
-   
+
+
 def import_header():
     """Read in information from the header file"""
     # Read in the htm file with the headers
-    header = []
-    with open(path+args.file_name+'.htm') as f:
+    head = []
+    with open(path+args.file_name+'.htm') as header_file:
         # Find the start of the code body
-        for line in f:
-            if line.strip()=="<tbody>":
+        for line in header_file:
+            if line.strip() == "<tbody>":
                 break
-        #Continue processing until the end of the body
-        for line in f:
-            if line.strip()=="</tbody>":
+        # Continue processing until the end of the body
+        for line in header_file:
+            if line.strip() == "</tbody>":
                 break
             # Extract the relevant column header information
-            header.append(line.split('</th><td>')[1].split('</td><td>')[0])
-    return header
+            head.append(line.split('</th><td>')[1].split('</td><td>')[0])
+    return head
+
 
 # Set up connection to MongoDB
 db = pymongo.MongoClient(args.client)[args.database]
@@ -110,7 +113,7 @@ num_lines = subprocess.check_output(['wc', '-l', filename]).split(filename)[0].s
 print "\tImporting", num_lines, "lines..."
 
 # Read in the htm file with the headers
-with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
+with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
     reader = csv.reader(f, delimiter='\t', quotechar='"', escapechar="\n")
     
     # Send the first line to an array of headers
@@ -126,7 +129,7 @@ with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
         my_id = int(row[id_index]) if row[id_index].isdigit() else row[id_index]
         
         # Initialize the document to be added to the database
-        doc = dict()#{args.unique_ID: my_id}
+        doc = dict()
         subdoc = dict()
         for j in range(len(row)):
             # Skip blanks, periods and the unique_ID being references
@@ -136,7 +139,7 @@ with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
                 # Check if the header contains the word date, then convert to a 
                 # date object
                 if "DATE" in header[j]:
-                # Try multiple date formats "MM/DD/YYYY"
+                    # Try multiple date formats "MM/DD/YYYY"
                     try:
                         subdoc[header[j]] = datetime.datetime.strptime(row[j], "%m/%d/%Y")
                     except ValueError:
@@ -152,29 +155,28 @@ with codecs.open(filename,"rb",encoding="utf-8",errors="ignore") as f:
                                 subdoc[header[j]] = clean_string(row[j])
 
                 elif row[j].isdigit():
-                    subdoc[header[j]] =  int(row[j])
+                    subdoc[header[j]] = int(row[j])
                 else:
                     subdoc[header[j]] = clean_string(row[j])
 
-        #Account for unique identifies for many many corresponding records
+        # Account for unique identifies for many many corresponding records
         if args.multiple:
             # Account for missing values in this column
             doc[args.subdoc_name] = subdoc 
-            bulk.find({args.unique_ID : my_id}).update({"$addToSet":doc})
+            bulk.find({args.unique_ID: my_id}).update({"$addToSet": doc})
         else:
             doc[args.subdoc_name] = subdoc
         
-            bulk.find({args.unique_ID : my_id}).update({"$set":doc})
+            bulk.find({args.unique_ID: my_id}).update({"$set": doc})
         lines_read += 1
         
         # Perform a bulk update to manage the data burden on Python
         if lines_read % 500 == 0:
             bulk.execute()
             bulk = db[args.collection_name].initialize_ordered_bulk_op()
-        #db[args.collection_name].update({args.unique_ID:my_id},{"$set":doc})
 
 # Finish bulk operations as long
 if lines_read % 500 != 0:
     result = bulk.execute()
 
-print "\t", lines_read, "lines of data have been imported"
+print("\t", lines_read, "lines of data have been imported")
