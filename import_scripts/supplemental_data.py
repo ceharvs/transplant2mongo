@@ -45,23 +45,19 @@ import subprocess
 
 # Parse in the input arguments
 parser = argparse.ArgumentParser(description='Process command line inputs')
-parser.add_argument('client', help='MongoDB Client for data storage',
-                    type=str)
-parser.add_argument('database', help='Database that will be used to store the data',
-                    type=str)
-parser.add_argument('file_name', help='Root name of file containing the data',
-                    type=str)
-parser.add_argument('subdoc_name', help='name for the sub document',
-                    type=str)
+parser.add_argument('client', help='MongoDB Client for data storage')
+parser.add_argument('database', help='Database that will be used to store the data')
+parser.add_argument('file_name', help='Root name of file containing the data')
+parser.add_argument('subdoc_name', help='name for the sub document')
 parser.add_argument('collection_name', help='Name of the collection to add'
-                                            ' the data to', type=str)
+                                            ' the data to')
 parser.add_argument('unique_ID', help='Unique identifier for the data set to be'
-                                      ' used as a matching key', type=str)
+                                      ' used as a matching key')
 parser.add_argument('-m', '--multiple', help='Include option if there are multiple'
                                              ' records per donor or patient, for example: '
                                              'followup data can have multiple records '
                                              'per person or unique_ID', action='store_true')
-args=parser.parse_args()
+args = parser.parse_args()
 
 # Specify the path to the data file
 path = 'data/'

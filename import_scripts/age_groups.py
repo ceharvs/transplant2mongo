@@ -25,15 +25,11 @@ import argparse
 # Parse in the input arguments
 parser = argparse.ArgumentParser(description='Process command line inputs')
 parser.add_argument('client', help='MongoDB Client location containing the database '
-                                   'that will be used to store the data', type=str)
-parser.add_argument('database', help='Database that will be used to store the data',
-                    type=str)
-parser.add_argument('collection_name', help='Name of the collection to be used',
-                    type=str)
-parser.add_argument('age_variable', help='Variable used in the collection to represent age',
-                    type=str)
-parser.add_argument('bin_variable', help='Variable name used to name age group',
-                    type=str)
+                                   'that will be used to store the data')
+parser.add_argument('database', help='Database that will be used to store the data')
+parser.add_argument('collection_name', help='Name of the collection to be used')
+parser.add_argument('age_variable', help='Variable used in the collection to represent age')
+parser.add_argument('bin_variable', help='Variable name used to name age group')
 args = parser.parse_args()
 
 # Set up connection to MongoDB

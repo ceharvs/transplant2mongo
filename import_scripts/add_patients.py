@@ -35,17 +35,13 @@ import subprocess
 
 # Input argument parsing
 parser = argparse.ArgumentParser(description='Process command line arguments')
-parser.add_argument('client', help='Location of the database being used',
-                    type=str)
-parser.add_argument('database', help='Name of the database on the client',
-                    type=str)
-parser.add_argument('file_name', help='Root name of file containing the data',
-                    type=str)
-parser.add_argument('collection_name', help='Name of the collection to import to',
-                    type=str)
+parser.add_argument('client', help='Location of the database being used')
+parser.add_argument('database', help='Name of the database on the client')
+parser.add_argument('file_name', help='Root name of file containing the data')
+parser.add_argument('collection_name', help='Name of the collection to import to')
 parser.add_argument('-u', '--unique_ID', help='Unique identifier for the data'
                                               ' set to be used as a matching key',
-                    nargs='?', const=None, type=str, default=None)
+                    nargs='?', const=None, default=None)
 args = parser.parse_args()
 
 # Path to data files
