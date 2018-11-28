@@ -14,7 +14,7 @@ DB=organ_data
 # Options include: deceased living intestine kidpan liver thoracic
 COMPONENTS=deceased living intestine kidpan liver thoracic
 
-all: prep $(COMPONENTS) 
+all: prep $(COMPONENTS) test
 
 prep:
 	@echo "Preparing for data import..."
@@ -340,6 +340,19 @@ thoracic:
 
 	@echo ""
 	@echo "Thoracic Data Import Complete"
+	@echo "--------------------------------------"
+
+test:
+	@echo ""
+	@echo "--------------------------------------"
+	# Run a test query on the data
+	@echo "Running Test Query on Database"
+	@echo "python test_database.py $(CLIENT) $(DB) Deceased_Donor ABO AB"
+	@python test_database.py $(CLIENT) $(DB) Deceased_Donor ABO AB
+	@echo ""
+	@echo "Expected Results for Sample Data: "
+	@echo "{'_id': '6', 'DONOR_ID': 6, 'ABO': 'AB', 'GENDER_DON': 'M', 'HOME_STATE_DON': 'CA', 'AGE_DON': '55  05042011', 'Inotropic_Meds': {'MEDICATION': 'Medicine A'}}"
+	@echo "Test Complete Data Import Complete"
 	@echo "--------------------------------------"
 
 clean:
