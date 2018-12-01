@@ -1,4 +1,7 @@
-# Guide for Transplant2Mongo
+# Transplant2Mongo
+
+[![DOI](https://zenodo.org/badge/82126974.svg)](https://zenodo.org/badge/latestdoi/82126974)
+
 
 This Tool allows users to import data from UNOS STAR files to MongoDB using Python.  This tool was developed using OPTN STAR file data as of June 2014 and March 2015.
 
@@ -10,7 +13,8 @@ interested in performing analysis and developing graphics, we also suggest the S
 * UNOS STAR File data (this must be obtained directly through UNOS and the OPTN).
 
 ## Setup Instructions
-Basic instructions for importing the UNOS Star data files into MongoDB.
+Basic instructions for importing the UNOS Star data files into MongoDB.  These instructions have been verified and 
+tested on macOS and CentOS 7.
 
 ### Install Required Software
 Install Python3 with the required libraries above. We suggest the Anaconda Python distribution: 
@@ -30,8 +34,8 @@ cd transplant2mongo
 The Makefile can be run using the default setup with sample data before configuring. Once you've verified the 
 tests work properly with the sample data, update the Makefile to point to your own STAR files.
 
-Edit `Makefile` in the following locations:
-* ORIGINAL_UNOS_DATA (line 3): Specify the location of the data source, including the first 'Delimited Text File' 
+Edit the `Makefile` in the following locations:
+* UNOS_DATA (line 3): Specify the location of the data source, including the 'Delimited Text File' 
 folder. By default, this points to synthetic sample data included in the repository.
 * CLIENT (line 10): Specify location of database client, by default this is 'localhost' and should be 'localhost' 
 unless the database will be hosted on a remote server. Mongodb must be running at this location.
