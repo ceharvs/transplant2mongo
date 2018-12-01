@@ -1,6 +1,21 @@
+#################################################################
+#
+# Makefile for transplant2mongo
+#
+# This file should work properly with the sample data immediately
+# following download if Python and MongoDB are properly installed.
+#
+# To use the Makefile with a different MongoDB server location,
+# UNOS Data Source, database name, or components, please edit
+# the corresponding lines below.  Full instructions are in the
+# README.md file.
+#
+#################################################################
+
+
 # Path to the "Delimited Test File" directory for the UNOS data
-# EDIT This to use another data path
-ORIGINAL_UNOS_DATA=sample-data/Delimited Text File/
+# Edit This to use another data path
+UNOS_DATA=sample-data/Delimited Text File/
 
 # Path to localized working directory for the data
 LINKED_DIRECTORY=organ_data_link
@@ -14,15 +29,33 @@ DB=organ_data
 # Options include: deceased living intestine kidpan liver thoracic
 COMPONENTS=deceased living intestine kidpan liver thoracic
 
+# Setting the type to allow "tr" to work on Mac
+export LC_CTYPE=C
+
+# Define the Python and MongoDB Libraries to use
+MONGO := $(shell command -v mongo 2> /dev/null)
+PYTHON := $(shell command -v python 2> /dev/null)
+
 all: prep $(COMPONENTS) test
 
 prep:
 	@echo "Preparing for data import..."
+
+	@echo "$MONGO"
+
+	@echo "- Check for proper Python and MongoDB Installs..."
+	$(if $(MONGO),,$(error Must set Mongo in PATH))
+	@echo " - MongoDB is installed and in the $PATH"
+
+	$(if $(PYTHON),,$(error Must set Python in PATH))
+	@echo " - Python is installed and in the $PATH"
+
 	@echo "- Dropping Database"
 	@- mongo $(CLIENT)/$(DB) --eval "db.dropDatabase()"
+
 	@echo "- Creating Links and Directories"
-	@- ln -s "$(ORIGINAL_UNOS_DATA)" $(LINKED_DIRECTORY)
-	@- mkdir data
+	@- ln -sf "$(UNOS_DATA)" $(LINKED_DIRECTORY)
+	@- mkdir -p data
 
 deceased:
 	@echo ""
