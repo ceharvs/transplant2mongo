@@ -16,6 +16,9 @@ interested in performing analysis and developing graphics, we also suggest the S
 Basic instructions for importing the UNOS Star data files into MongoDB.  These instructions have been verified and 
 tested on macOS and CentOS 7.
 
+The GitHub repository comes with sample data to test the install with.  We suggest running the code with the 
+sample data first to verify the install completed properly and your environment is set up properly.
+
 ### Install Required Software
 Install Python3 with the required libraries above. We suggest the Anaconda Python distribution: 
 https://www.anaconda.com/download/
@@ -30,31 +33,17 @@ git clone https://github.com/ceharvs/transplant2mongo/
 cd transplant2mongo
 ```
 
-### Customize the Makefile
-The Makefile can be run using the default setup with sample data before configuring. Once you've verified the 
-tests work properly with the sample data, update the Makefile to point to your own STAR files.
-
-Edit the `Makefile` in the following locations:
-* UNOS_DATA (line 3): Specify the location of the data source, including the 'Delimited Text File' 
-folder. By default, this points to synthetic sample data included in the repository.
-* CLIENT (line 10): Specify location of database client, by default this is 'localhost' and should be 'localhost' 
-unless the database will be hosted on a remote server. Mongodb must be running at this location.
-* DB (line 11): Specify the name of the database to be used within Mongodb, by default, this is 'organ_data'.
-* COMPONENTS (line 15): The components are the UNOS STAR files that you have access to, this will be list of file 
-types (deceased living intestine kidpan liver thoracic) separated by a single space.  The default setting for the 
-Makefile uses all possible components.
-
-Run the Makefile to populate the database.
+### Quickstart with Sample Data
+If you have MongoDB set up on the system you're using, the sample data should properly go into MongoDB using the
+Makefile. Run the following to populate the sample DB and test. 
 ```
 make all
 ```
 
-## Test
+#### Test and Verify
 
-The makefile includes a test which runs at the end of `make all`.  
-
-To test the import separately, use the default settings for the sample data set.  Once all of the sample data 
-has been loaded, try running the following python script:
+The makefile includes a test which runs at the end of `make all`.  To test the import separately, use the default 
+settings for the sample data set.  Once all of the sample data has been loaded, try running the following python script:
 ```
 python test_database.py localhost organ_data Deceased_Donor ABO AB
 ```
@@ -70,6 +59,24 @@ You should get the following output:
  'Inotropic_Meds': 
     {'MEDICATION': 'Medicine A'}
 }
+```
+
+### Run the Code in Real STAR files
+Once you've verified the tests work properly with the sample data, update the Makefile to point to your own STAR files.
+
+Edit the `Makefile` in the following locations:
+* UNOS_DATA (line 3): Specify the location of the data source, including the 'Delimited Text File' 
+folder. By default, this points to synthetic sample data included in the repository.
+* CLIENT (line 10): Specify location of database client, by default this is 'localhost' and should be 'localhost' 
+unless the database will be hosted on a remote server. Mongodb must be running at this location.
+* DB (line 11): Specify the name of the database to be used within Mongodb, by default, this is 'organ_data'.
+* COMPONENTS (line 15): The components are the UNOS STAR files that you have access to, this will be list of file 
+types (deceased living intestine kidpan liver thoracic) separated by a single space.  The default setting for the 
+Makefile uses all possible components.
+
+Run the Makefile to populate the database.
+```
+make all
 ```
 
 ## Reviewing and Accessing Data
