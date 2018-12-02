@@ -42,6 +42,7 @@ import pymongo
 import datetime
 import argparse
 import subprocess
+from tqdm import tqdm
 
 # Parse in the input arguments
 parser = argparse.ArgumentParser(description='Process command line inputs')
@@ -106,7 +107,10 @@ db[args.collection_name].ensure_index(args.unique_ID)
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
 num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
-print("\tImporting", num_lines, "lines...")
+print("    Importing", num_lines, "lines...")
+
+# Create a progress bar to report status
+progress = tqdm(total=int(num_lines), leave=True, desc="    Progress")
 
 # Read in the htm file with the headers
 with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
@@ -171,8 +175,16 @@ with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
             bulk.execute()
             bulk = db[args.collection_name].initialize_ordered_bulk_op()
 
+            # Update the progress bar
+            progress.update(500)
+
+# Finish the progress bar
+progress.update(int(num_lines)-(lines_read % 500))
+progress.close()
+
 # Finish bulk operations as long
 if lines_read % 500 != 0:
     result = bulk.execute()
 
-print("\t", lines_read, "lines of data have been imported")
+# Print progress to the screen
+print("     ", lines_read, "lines of data have been imported")

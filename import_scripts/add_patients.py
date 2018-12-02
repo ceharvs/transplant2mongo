@@ -32,6 +32,7 @@ import pymongo
 import argparse
 import datetime
 import subprocess
+from tqdm import tqdm
 
 # Input argument parsing
 parser = argparse.ArgumentParser(description='Process command line arguments')
@@ -86,7 +87,7 @@ collection = 'db.'+args.collection_name
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
 num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
-print("\tImporting", num_lines, "lines...")
+print("    Importing", num_lines, "lines...")
 
 # Import from the header file
 header = import_header()
@@ -94,6 +95,9 @@ header = import_header()
 # Establish counting and lists for data imports
 imported_file_count = 0
 posts = []
+
+# Create a progress bar to report status
+progress = tqdm(total=int(num_lines), desc="    Progress")
 
 # Read in the htm file with the headers
 with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
@@ -130,10 +134,24 @@ with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
         
         posts.append(doc)
         if len(posts) > 500:
+            # Insert posts into the database
             db[args.collection_name].insert(posts)
+            # Update the progress bar
+            progress.update(len(posts))
+            # Increase the file count for imports and reset posts
             imported_file_count += len(posts)
             posts = []
 
+
+# Write the final commit to the database
 db[args.collection_name].insert(posts)
+
+# Finish the progress bar
+progress.update(len(posts))
+progress.close()
+
+# Increment the total imported file count
 imported_file_count += len(posts)
-print("\t", imported_file_count, "lines of data have been imported")
+
+# Print progress to the screen
+print("     ", imported_file_count, "lines of data have been imported")
