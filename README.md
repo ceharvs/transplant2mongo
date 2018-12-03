@@ -67,8 +67,8 @@ Once you've verified the tests work properly with the sample data, update the Ma
 Edit the `Makefile` in the following locations:
 * UNOS_DATA (line 3): Specify the location of the data source, including the 'Delimited Text File' 
 folder. By default, this points to synthetic sample data included in the repository.
-* CLIENT (line 10): Specify location of database client, by default this is 'localhost' and should be 'localhost' 
-unless the database will be hosted on a remote server. Mongodb must be running at this location.
+* SERVER (line 10): Specify location of database server, by default this is 'localhost:27017' and should be
+ 'localhost:27017' unless the database will be hosted on a remote server. Mongodb must be running at this location.
 * DB (line 11): Specify the name of the database to be used within Mongodb, by default, this is 'organ_data'.
 * COMPONENTS (line 15): The components are the UNOS STAR files that you have access to, this will be list of file 
 types (deceased living intestine kidpan liver thoracic) separated by a single space.  The default setting for the 
