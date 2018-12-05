@@ -1,0 +1,8 @@
+Querying data from Deceased_Donor including attributes: ['ABO', 'AGE_DON', 'GENDER_DON']
+5 entries found in the database
+  ABO  AGE_DON GENDER_DON _id
+0   A       27          F   1
+1   B       60          F   2
+2  AB       55          M   6
+3   O       32          M   8
+4   A       35          M  11
