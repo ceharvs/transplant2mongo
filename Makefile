@@ -35,20 +35,25 @@ export LC_CTYPE=C
 # Define the Python and MongoDB Libraries to use
 MONGO := $(shell command -v mongo 2> /dev/null)
 PYTHON := $(shell command -v python 2> /dev/null)
+MONGODB := $(shell command -v curl --fail http://$SERVER)
 
-all: prep $(COMPONENTS) test
+all: prep $(COMPONENTS) clean
 
 prep:
 	@echo "Preparing for data import..."
 
-	@echo "$MONGO"
+	@echo "$(MONGO)"
 
 	@echo "- Check for proper Python and MongoDB Installs..."
 	$(if $(MONGO),,$(error Must set Mongo in PATH))
-	@echo " - MongoDB is installed and in the $PATH"
+	@echo " - MongoDB is installed and in the PATH"
 
 	$(if $(PYTHON),,$(error Must set Python in PATH))
-	@echo " - Python is installed and in the $PATH"
+	@echo " - Python is installed and in the PATH"
+
+	@echo "- Looking for a running MongoDB Server at $(SERVER)"
+	$(if $(MONGODB),,$(error MongoDB not running. Start it using the command mongod.))
+	@echo " - MongoDB server is running at $(SERVER)."
 
 	@echo "- Dropping Database"
 	@- mongo $(SERVER)/$(DB) --eval "db.dropDatabase()"
@@ -100,7 +105,7 @@ living:
 
 	@echo "- Parsing Follow-Up data for Living Donors and inserting into MongoDB..."
 	@python import_scripts/supplemental_data.py $(SERVER) $(DB) LIVING_DONOR_FOLLOWUP_DATA Living_Donor_Follow Living_Donor DONOR_ID -m
-	
+
 	@echo "- Cleaning up data files..."
 	@rm data/"LIVING_DONOR"*
 
@@ -127,7 +132,7 @@ intestine:
 	@echo "- Parsing INTESTINE data and inserting into MongoDB..."
 	@python import_scripts/add_patients.py $(SERVER) $(DB) INTESTINE_DATA Intestine
 
-	# Intestine HLA Data 
+	# Intestine HLA Data
 	@echo "- Parsing HLA data for INTESTINE and inserting into MongoDB..."
 	@python import_scripts/supplemental_data.py $(SERVER) $(DB) INTESTINE_ADDTL_HLA Intestine_HLA Intestine TRR_ID_CODE
 
@@ -181,8 +186,8 @@ kidpan:
 	@rm -rf data/*/
 
 	# Send the Kidney-Pancreas Data into Mongo
-	@echo "- Parsing KIDPAN data and inserting into MongoDB..." 
-	@python import_scripts/add_patients.py $(SERVER) $(DB) KIDPAN_DATA Kidney_Pancreas 
+	@echo "- Parsing KIDPAN data and inserting into MongoDB..."
+	@python import_scripts/add_patients.py $(SERVER) $(DB) KIDPAN_DATA Kidney_Pancreas
 
 	# Kidney-Pancreas HLA
 	@echo "- Parsing HLA data for KIDPAN and inserting into MongoDB..."
@@ -244,9 +249,9 @@ liver:
 	@mv data/*/** data/.
 	@rm -rf data/*/
 
-	# Send the Liver Data into Mongo 
+	# Send the Liver Data into Mongo
 	@echo "- Parsing LIVER data and inserting into MongoDB..."
-	@python import_scripts/add_patients.py $(SERVER) $(DB) LIVER_DATA Liver 
+	@python import_scripts/add_patients.py $(SERVER) $(DB) LIVER_DATA Liver
 
 	# Explant Data - Only for LIVER Patients
 	@echo "- Parsing Explant data for LIVER and inserting into MongoDB..."
@@ -315,9 +320,9 @@ thoracic:
 	@mv data/*/** data/.
 	@rm -rf data/*/
 
-	# Send the Thoracic data into Mongo 
+	# Send the Thoracic data into Mongo
 	@echo "- Parsing THORACIC data and inserting into MongoDB..."
-	@python import_scripts/add_patients.py $(SERVER) $(DB) THORACIC_DATA Thoracic 
+	@python import_scripts/add_patients.py $(SERVER) $(DB) THORACIC_DATA Thoracic
 
 	# Thoracic HLA
 	@echo "- Parsing HLA data for THORACIC and inserting into MongoDB..."
@@ -349,16 +354,16 @@ thoracic:
 
 	# Thoracic MCS Device Data
 	@echo "- Parsing MSC Device data for THORACIC and inserting into MongoDB..."
-	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_MCS_DEVICE Thoracic_MCS_DEVICE Thoracic WL_ID_CODE -m 
+	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_MCS_DEVICE Thoracic_MCS_DEVICE Thoracic WL_ID_CODE -m
 
 	# Thoracic WL-LAS Data
 	@echo "- Parsing Waiting List LAS data for THORACIC and inserting into MongoDB..."
-	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_LAS_AUDIT_DATA Thoracic_LAS_Audit Thoracic WL_ID_CODE -m 
-	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_LAS_HISTORY_DATA Thoracic_LAS_History Thoracic WL_ID_CODE -m 
+	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_LAS_AUDIT_DATA Thoracic_LAS_Audit Thoracic WL_ID_CODE -m
+	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_LAS_HISTORY_DATA Thoracic_LAS_History Thoracic WL_ID_CODE -m
 
 	# Thoracic WL-Status Justification Data
 	@echo "- Parsing Waiting List Status Justification data for THORACIC and inserting into MongoDB..."
-	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_STAT1A Thoracic_Stat1A Thoracic WL_ID_CODE -m 
+	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_STAT1A Thoracic_Stat1A Thoracic WL_ID_CODE -m
 	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_STAT1B Thoracic_Stat1B Thoracic WL_ID_CODE -m
 	@python import_scripts/supplemental_data.py $(SERVER) $(DB) THORACIC_VAD_IMPLANT_DATES Thoracic_VAD_Implant Thoracic WL_ID_CODE -m
 
@@ -375,17 +380,15 @@ thoracic:
 	@echo "Thoracic Data Import Complete"
 	@echo "--------------------------------------"
 
-test:
+test-sample-data:
 	@echo ""
 	@echo "--------------------------------------"
 	# Run a test query on the data
-	@echo "Running Test Query on Database"
-	@echo "python test_database.py $(SERVER) $(DB) Deceased_Donor ABO AB"
-	@python test_database.py $(SERVER) $(DB) Deceased_Donor ABO AB
-	@echo ""
-	@echo "Expected Results for Sample Data: "
-	@echo "{'_id': '6', 'DONOR_ID': 6, 'ABO': 'AB', 'GENDER_DON': 'M', 'HOME_STATE_DON': 'CA', 'AGE_DON': '55  05042011', 'Inotropic_Meds': {'MEDICATION': 'Medicine A'}}"
-	@echo "Test Complete Data Import Complete"
+	@echo "Running Test Query on Database; Collection = Deceased Donors"
+	- mkdir -p tmp
+	python query.py --server $(SERVER) --db $(DB) --collection Deceased_Donor --test  > tmp/organ_data_Deceased_Donor.txt
+	diff tmp/organ_data_Deceased_Donor.txt test-data/organ_data_Deceased_Donor.txt
+	@echo "Test Passed."
 	@echo "--------------------------------------"
 
 clean:
