@@ -22,24 +22,47 @@ import argparse
 import pandas as pd
 
 # Parse in the input arguments
-parser = argparse.ArgumentParser(description='Process command line input')
-parser.add_argument('client', help='Location of the database where the files '
-                                   'and information are being stored in MongoDB.')
-parser.add_argument('database', help='Database that will be used to store the data')
-parser.add_argument('collection_name', help='Name of the collection to be used')
-parser.add_argument('attributes', help='Attributes or Columns to pull for the Data.',
+parser = argparse.ArgumentParser(description='Process command line '
+                                             'input for the query tool')
+parser.add_argument('--server', default="localhost:27017",
+                    help='Location of the database where the files '
+                         'and information are being stored in MongoDB')
+parser.add_argument('--db', default='organ_data',
+                    help='Database that will be used to store the data')
+parser.add_argument('--collection', default='Deceased_Donor',
+                    help='Name of the collection to be used')
+parser.add_argument('--file_name', default='output.csv',
+                    help='Output file to store results')
+parser.add_argument('--attributes', default=['ABO', 'AGE_DON', 'GENDER_DON'],
+                    help='Attributes or Columns to pull for the Data',
                     nargs='+')
-parser.add_argument('--file_name', default='output.csv', help='Output file to store'
-                                                              'results.')
+parser.add_argument('--test', help='Run in test mode to perform query only '
+                                   'and skip the file output',
+                    action='store_true')
 args = parser.parse_args()
 
-
+print("Querying data from %s including attributes: %s" % (args.collection, args.attributes))
 # Create a dictionary of the attributes to be selected from the database
 select = dict(zip(args.attributes, [1]*len(args.attributes)))
 
 # Establish a database connection
-db = pymongo.MongoClient(args.client)[args.database]
-collection = db[args.collection_name]
+db = pymongo.MongoClient(args.server)[args.db]
+collection = db[args.collection]
 
-# Convert to a Pandas DataFrame and print to a CSV
-pd.DataFrame(list(collection.find({}, select))).to_csv(args.file_name, index=False)
+# Build a query for the results, limit to 5 for the test
+if args.test:
+    query = collection.find({}, select).limit(5)
+else:
+    query = collection.find({}, select)
+
+# Pull data and convert to a Pandas DataFrame
+results = pd.DataFrame(list(query))
+print("%d entries found in the database" % len(results))
+
+# Print results to screen for test mode and to file for general query
+if args.test:
+    print(results.to_string())
+else:
+    results.to_csv(args.file_name, index=False)
+    print("File successfully written to %s" % args.file_name)
+
