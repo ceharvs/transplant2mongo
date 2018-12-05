@@ -179,7 +179,7 @@ with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
             progress.update(500)
 
 # Finish the progress bar
-progress.update(int(num_lines)-(lines_read % 500))
+progress.update(lines_read % 500)
 progress.close()
 
 # Finish bulk operations as long
