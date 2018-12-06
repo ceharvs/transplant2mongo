@@ -2,9 +2,6 @@
 #
 # Makefile for transplant2mongo
 #
-# This file should work properly with the sample data immediately
-# following download if Python and MongoDB are properly installed.
-#
 # To use the Makefile with a different MongoDB server location,
 # UNOS Data Source, database name, or components, please edit
 # the corresponding lines below.  Full instructions are in the
@@ -12,30 +9,34 @@
 #
 #################################################################
 
-
+#################################################################
+# User-defined parameters
+#
 # Path to the "Delimited Test File" directory for the UNOS data
-# Edit This to use another data path
+# obtained from the OPTN. Edit to use another directory.
 UNOS_DATA=sample-data/Delimited Text File/
+
+# Define the database components to be made based on data obtained
+# from the OPTN. Default assumes all components were obtained
+# from the OPTN
+COMPONENTS=deceased living intestine kidpan liver thoracic
+
+# MongoDB server address
+SERVER=localhost:27017
+
+# DB name
+DB=organ_data
 
 # Path to localized working directory for the data
 LINKED_DIRECTORY=organ_data_link
+#################################################################
 
-# Describe the SERVER and the database to be used.
-# Edit this section if you do not want to use the default database
-SERVER=localhost:27017
-DB=organ_data
-
-# Define the database components to be made
-# Options include: deceased living intestine kidpan liver thoracic
-COMPONENTS=deceased living intestine kidpan liver thoracic
-
-# Setting the type to allow "tr" to work on Mac
+# Set the ctype to allow "tr" to work on Mac
 export LC_CTYPE=C
 
 # Define the Python and MongoDB Libraries to use
 MONGO := $(shell command -v mongo 2> /dev/null)
 PYTHON := $(shell command -v python 2> /dev/null)
-MONGODB := $(shell command -v curl --fail http://$SERVER)
 
 all: prep $(COMPONENTS) clean
 
@@ -44,15 +45,15 @@ prep:
 
 	@echo "$(MONGO)"
 
-	@echo "- Check for proper Python and MongoDB Installs..."
-	$(if $(MONGO),,$(error Must set Mongo in PATH))
-	@echo " - MongoDB is installed and in the PATH"
+	@echo "- Check that mongo is available ..."
+	$(if $(MONGO),,$(error Must install or set mongo in PATH))
+	@echo " - MongoDB is available."
 
 	$(if $(PYTHON),,$(error Must set Python in PATH))
 	@echo " - Python is installed and in the PATH"
 
 	@echo "- Looking for a running MongoDB Server at $(SERVER)"
-	$(if $(MONGODB),,$(error MongoDB not running. Start it using the command mongod.))
+	@mongo --eval 'db.stats()' > /dev/null 2>&1
 	@echo " - MongoDB server is running at $(SERVER)."
 
 	@echo "- Dropping Database"
@@ -390,6 +391,7 @@ test-sample-data:
 	diff tmp/organ_data_Deceased_Donor.txt test-data/organ_data_Deceased_Donor.txt
 	@echo "Test Passed."
 	@echo "--------------------------------------"
+	@rm -rf tmp
 
 clean:
 	- rm -rf $(LINKED_DIRECTORY)
