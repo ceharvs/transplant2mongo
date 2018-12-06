@@ -2,9 +2,9 @@
 
 [![DOI](https://zenodo.org/badge/82126974.svg)](https://zenodo.org/badge/latestdoi/82126974)
 
-Transplant2Mongo allows users to easily insert [UNOS STAR](https://optn.transplant.hrsa.gov/data) text files containing [U.S. organ transplant data](https://optn.transplant.hrsa.gov/) into a Mongo database using Python. 
+Transplant2Mongo allows users to easily insert the complex set of [UNOS STAR](https://optn.transplant.hrsa.gov/data) tab-separated variable files containing [U.S. organ transplant data](https://optn.transplant.hrsa.gov/) into a Mongo database using Python. 
 
-The intended user is a researcher interested in doing analysis on [UNOS STAR](https://optn.transplant.hrsa.gov/) data. This software parses and inserts the UNOS STAR text files into a Mongo Database such that the database can be easily queried.
+The intended user is a researcher interested in doing analysis on [UNOS STAR](https://optn.transplant.hrsa.gov/) data. This software parses and inserts the UNOS STAR text files into a Mongo Database such that the database can be easily queried using open-source software.
 
 Transplant2Mongo was has been tested with [UNOS STAR](https://optn.transplant.hrsa.gov/data) files from the [OPTN](https://optn.transplant.hrsa.gov/) obtained in June 2014 and March 2015.
 
@@ -22,9 +22,13 @@ These instructions have been tested on macOS 10.14, MongoDB 3.4, and Python 3.6;
 
 ### Install Required Software
 
-After installing the requirements, start MongoDB using the [installation instructions](https://docs.mongodb.com/manual/administration/install-community/) for your operating system.
+After installing MongoDB using the [installation instructions](https://docs.mongodb.com/manual/administration/install-community/), start it with
 
-The Python packages can be installed using
+```
+mongod --dbpath /tmp
+```
+
+Next, install Python dependencies using
 
 ```
 pip install pymongo pandas tqdm
@@ -64,7 +68,7 @@ The makefile includes progress bars showing the number of files imported and the
 After verifying the installation using the test data, either modify the `UNOS_DATA` variable in the Makefile to point to the directory of actual STAR files or pass it as a variable, e.g.,
 
 ```
-make UNOS_DATA=/path/to/data
+make UNOS_DATA=/path/to/Delimited Text File/
 ```
 
 Parameters in the Makefile include:
@@ -85,12 +89,12 @@ Robo 3T (https://robomongo.org/) can be used to browse the Mongo database. After
 
 ### Jupyter Notebook
 
-An example Jupyter notebook, [Quick_Query_Introduction.ipynb](https://github.com/ceharvs/transplant2mongo/blob/master/Quick_Query_Introduction.ipynb), can be used for analysis and to get started with queries and generating statistical analysis and graphics.
+An example Jupyter notebook, [query-samples.ipynb](https://github.com/ceharvs/transplant2mongo/blob/master/query-examples.ipynb), can be used for analysis and to get started with queries and generating statistical analysis and graphics.
 
 Launch Jupyter Notebooks by running 
 
 ```
-jupyter notebook Quick_Query_Introduction.ipynb
+jupyter notebook query-examples.ipynb
 ``` 
 
 from the command line within the directory `transplant2mongo`.  This should open a web browser where you can click to open the file.  
