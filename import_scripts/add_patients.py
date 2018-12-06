@@ -87,7 +87,7 @@ collection = 'db.'+args.collection_name
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
 num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
-print("    Importing", num_lines, "lines...")
+print("    Importing %s lines ..." % str(num_lines))
 
 # Import from the header file
 header = import_header()
@@ -154,4 +154,4 @@ progress.close()
 imported_file_count += len(posts)
 
 # Print progress to the screen
-print("     ", imported_file_count, "lines of data have been imported")
+print("    Imported %d lines ..." % imported_file_count)

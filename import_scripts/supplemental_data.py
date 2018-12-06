@@ -107,7 +107,7 @@ db[args.collection_name].ensure_index(args.unique_ID)
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
 num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
-print("    Importing", num_lines, "lines...")
+print("    Importing %s lines ..." % str(num_lines))
 
 # Create a progress bar to report status
 progress = tqdm(total=int(num_lines), leave=True, desc="    Progress")
@@ -187,4 +187,4 @@ if lines_read % 500 != 0:
     result = bulk.execute()
 
 # Print progress to the screen
-print("     ", lines_read, "lines of data have been imported")
+print("    Imported %d lines ..." % lines_read)
