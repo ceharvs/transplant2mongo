@@ -31,7 +31,7 @@ mongod --dbpath /tmp
 Next, install Python dependencies using
 
 ```
-pip install pymongo pandas tqdm
+pip install pymongo pandas tqdm seaborn
 ```
 
 ### Download Transplant2Mongo
@@ -45,9 +45,9 @@ cd transplant2mongo
 
 ### Create and Test Database Using Test Data
 
-The GitHub repository comes with sample data to test the install with.  We suggest running the code with the sample data first to verify the install completed properly and your environment is set up properly.
+The GitHub repository comes with sample data (synthetic - not based on real patient information) to test the install with.  We suggest running the code with the sample data first to verify the install completed properly and your environment is set up properly.
 
-If you have MongoDB set up on the system you're using, the sample data should properly go into MongoDB using the Makefile. Run the following to populate the sample DB and test. 
+Run the following to create a database using the sample data and test. 
 
 From the command line, execute
 
@@ -61,8 +61,6 @@ This will import the test data into a Mongo database. To test the import, execut
 make test-sample-data
 ```
 
-The makefile includes progress bars showing the number of files imported and the number of iterations per second.  (With the sample data, these display may show [00:00<00:00, ?it/s], which does not indicate an error - there is just too little time to estimate the progress.)
-
 ### Create Database Using Real Data
 
 After verifying the installation using the test data, either modify the `UNOS_DATA` variable in the Makefile to point to the directory of actual STAR files or pass it as a variable, e.g.,
@@ -73,17 +71,16 @@ make UNOS_DATA=/path/to/Delimited Text File/
 
 Parameters in the Makefile include:
 
-* `UNOS_DATA`: The location of the data source, including the 'Delimited Text File' folder. By default, this points to synthetic sample data included in the repository.
-* `CLIENT`: The location of database client, by default this is 'localhost' and should be 'localhost' unless the database will be hosted on a remote server. Mongodb must be running at this location.
-* `DB`: The name of the database to be used within Mongodb, by default, this is 'organ_data'.
+* `UNOS_DATA`: The location the 'Delimited Text File' directory. By default, this is the sample data directory included in the repository.
 * `COMPONENTS`: The UNOS STAR files that you have access to and are in the `UNOS_DATA` directory. This is a list of file types (which include `deceased living intestine kidpan liver thoracic`) separated by a single space.  The default setting for the Makefile uses all possible components.
-
+* `SERVER`: The location of database client, by default this is 'localhost' and should be 'localhost' unless the database will be hosted on a remote server. Mongodb must be running at this location.
+* `DB`: The name of the database to be used within Mongodb, by default, this is 'organ_data'.
 
 ## Reviewing and Accessing Data
 
 ### Robo 3T
 
-Robo 3T (https://robomongo.org/) can be used to browse the Mongo database. After installation, select "new connection" and use the defaults.
+Robo 3T (https://robomongo.org/) can be used to browse the MongoDB database. After installation, select "new connection" and use the defaults.
 
 ![Robo3T screenshot](Robo3T.png)
 
