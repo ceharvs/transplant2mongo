@@ -82,7 +82,7 @@ Parameters in the Makefile include:
 
 Robo 3T (https://robomongo.org/) can be used to browse the MongoDB database. After installation, select "new connection" and use the defaults.
 
-![Robo3T screenshot](Robo3T.png)
+![Robo3T screenshot](images/Robo3T.png)
 
 ### Jupyter Notebook
 
