@@ -97,12 +97,13 @@ def import_header():
 
 # Set up connection to MongoDB
 db = pymongo.MongoClient(args.client)[args.database]
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
+#bulk = db[args.collection_name].initialize_ordered_bulk_op()
+requests = []
 
 header = import_header()
 
-# Ensure Index for speed
-db[args.collection_name].ensure_index(args.unique_ID)
+# Create Index for speed
+db[args.collection_name].create_index(args.unique_ID)
 
 # Check the length of the file
 filename = path + args.file_name + ".DAT"
@@ -162,18 +163,20 @@ with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
         # Account for unique identifies for many many corresponding records
         if args.multiple:
             # Account for missing values in this column
-            doc[args.subdoc_name] = subdoc 
-            bulk.find({args.unique_ID: my_id}).update({"$addToSet": doc})
+            doc[args.subdoc_name] = subdoc
+            requests.append(pymongo.UpdateOne({args.unique_ID: my_id},{"$addToSet": doc}))
+            #bulk.find({args.unique_ID: my_id}).update({"$addToSet": doc})
         else:
             doc[args.subdoc_name] = subdoc
-        
-            bulk.find({args.unique_ID: my_id}).update({"$set": doc})
+            requests.append(pymongo.UpdateOne({args.unique_ID: my_id}, {"$set": doc}))
+            #bulk.find({args.unique_ID: my_id}).update({"$set": doc})
         lines_read += 1
         
         # Perform a bulk update to manage the data burden on Python
         if lines_read % 500 == 0:
-            bulk.execute()
-            bulk = db[args.collection_name].initialize_ordered_bulk_op()
+            db[args.collection_name].bulk_write(requests)
+            requests = []
+            #bulk = db[args.collection_name].initialize_ordered_bulk_op()
 
             # Update the progress bar
             progress.update(500)
@@ -184,7 +187,7 @@ progress.close()
 
 # Finish bulk operations as long
 if lines_read % 500 != 0:
-    result = bulk.execute()
+    db[args.collection_name].bulk_write(requests)
 
 # Print progress to the screen
 print("    Imported %d lines ..." % lines_read)

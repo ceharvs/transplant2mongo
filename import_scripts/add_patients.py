@@ -135,7 +135,7 @@ with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
         posts.append(doc)
         if len(posts) > 500:
             # Insert posts into the database
-            db[args.collection_name].insert(posts)
+            db[args.collection_name].insert_many(posts)
             # Update the progress bar
             progress.update(len(posts))
             # Increase the file count for imports and reset posts
@@ -144,7 +144,7 @@ with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
 
 
 # Write the final commit to the database
-db[args.collection_name].insert(posts)
+db[args.collection_name].insert_many(posts)
 
 # Finish the progress bar
 progress.update(len(posts))

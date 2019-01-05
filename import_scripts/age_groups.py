@@ -34,47 +34,30 @@ args = parser.parse_args()
 
 # Set up connection to MongoDB
 db = pymongo.MongoClient(args.client)[args.database]
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
 
 # Ensure that an index is in place for the variable being used for age
 db[args.collection_name].create_index(args.age_variable)
 
-# Find all Under a year old
-bulk.find({args.age_variable: {"$lt": 1}}).update({"$set": {args.bin_variable: "<1"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
+# Define the Age bins used
+age_bins = {'<1': [0,1],
+            '1-5': [1,5],
+            '6-10': [6,10],
+            '11-17': [11,17],
+            '18-34': [18,34],
+            '35-49': [35,49],
+            '50-64': [50,64],
+            '65+': [65,300]}
 
-# Find all between 1 and 5
-bulk.find({args.age_variable: {"$gte": 1, "$lte": 5}}).update({"$set": {args.bin_variable: "1-5"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
 
-# Find all between 6 and 10
-bulk.find({args.age_variable: {"$gte": 6, "$lte": 10}}).update({"$set": {args.bin_variable: "6-10"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
+# Cycle through the age bins to perform the groupings
+for index in age_bins:
+    min_age = age_bins[index][0]
+    max_age = age_bins[index][1]
+    bin_name = index
 
-# Find all between 11 and 17
-bulk.find({args.age_variable: {"$gte": 11, "$lte": 17}}).update({"$set": {args.bin_variable: "11-17"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
+    # Detail the requested change to make
+    requests = [pymongo.UpdateMany({args.age_variable: {"$gte": min_age, "$lte": max_age}},
+                                   {"$set": {args.bin_variable: bin_name}})]
 
-# Find all between 18 and 34
-bulk.find({args.age_variable: {"$gte": 18, "$lte": 34}}).update({"$set": {args.bin_variable: "18-34"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
-
-# Find all between 35 and 49
-bulk.find({args.age_variable: {"$gte": 35, "$lte": 49}}).update({"$set": {args.bin_variable: "35-49"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
-
-# Find all between 50 and 64
-bulk.find({args.age_variable: {"$gte": 50, "$lte": 64}}).update({"$set": {args.bin_variable: "50-64"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
-
-# Find all 65+
-bulk.find({args.age_variable: {"$gte": 65}}).update({"$set": {args.bin_variable: "65+"}})
-bulk.execute()
-bulk = db[args.collection_name].initialize_ordered_bulk_op()
+    # Perform the operation
+    result = db[args.collection_name].bulk_write(requests)
