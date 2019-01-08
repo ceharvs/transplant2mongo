@@ -28,15 +28,15 @@ After installing MongoDB using the [installation instructions](https://docs.mong
 mongod
 ```
 
-If you're new to MongoDB, you may need to create the default directory mongo uses to run the server
+If you're new to MongoDB, you may first need to create the default directory mongo uses to run the server.
 
 ```
-mkdir /data/db
+mkdir -p /data/db
 ```
 
-Permission issues may prevent this, in that case you can specify a different directory where you do have read/write access
+Permission issues may prevent the default directory creation, in that case you can specify a different directory where you do have read/write access
 ```
-mkdir ~/data/db
+mkdir -p ~/data/db
 mongod --dbpath ~/data/db
 ```
 
