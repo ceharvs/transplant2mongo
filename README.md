@@ -25,7 +25,19 @@ These instructions have been tested on macOS 10.14, MongoDB 3.4, and Python 3.6;
 After installing MongoDB using the [installation instructions](https://docs.mongodb.com/manual/administration/install-community/), start it with
 
 ```
-mongod --dbpath /tmp
+mongod
+```
+
+If you're new to MongoDB, you may need to create the default directory mongo uses to run the server
+
+```
+mkdir /data/db
+```
+
+Permission issues may prevent this, in that case you can specify a different directory where you do have read/write access
+```
+mkdir ~/data/db
+mongod --dbpath ~/data/db
 ```
 
 Next, install Python dependencies using
