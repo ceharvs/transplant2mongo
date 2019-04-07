@@ -84,7 +84,7 @@ deceased:
 	@rm data/"DECEASED_DONOR"*
 
 	@echo "- Creating Age groupings for the donors in the database"
-	@python import_scripts/age_groups.py $(SERVER) $(DB) Living_Donor AGE_DON AGE_BIN
+	@python import_scripts/age_groups.py $(SERVER) $(DB) Deceased_Donor AGE_DON AGE_BIN
 
 	@echo ""
 	@echo "Deceased Donor Data Import Complete"
@@ -111,7 +111,7 @@ living:
 	@rm data/"LIVING_DONOR"*
 
 	@echo "- Creating Age groupings for the donors in the database"
-	@python import_scripts/age_groups.py $(SERVER) $(DB) Deceased_Donor AGE_DON AGE_BIN
+	@python import_scripts/age_groups.py $(SERVER) $(DB) Living_Donor AGE_DON AGE_BIN
 
 	@echo ""
 	@echo "Living Donor Data Import Complete"
