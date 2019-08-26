@@ -90,6 +90,29 @@ deceased:
 	@echo "Deceased Donor Data Import Complete"
 	@echo "--------------------------------------"
 
+
+deceased_srtr:
+	@echo ""
+	@echo "--------------------------------------"
+	@echo "Beginning Deceased Donor Data Import (SRTR Files)"
+
+	@echo "- Copying over data from files to local directory..."
+	@cp -r "$(LINKED_DIRECTORY)"/* data/.
+
+	@echo "- Parsing Deceased Donor data and inserting into MongoDB..."
+	@python import_scripts/add_patients_SRTR.py $(SERVER) $(DB) donor_deceased Deceased_Donor -u DON_ID
+
+	@echo "- Cleaning up data files..."
+	@rm data/*
+
+	@echo "- Creating Age groupings for the donors in the database"
+	@python import_scripts/age_groups.py $(SERVER) $(DB) Deceased_Donor DON_AGE AGE_BIN
+
+	@echo ""
+	@echo "Deceased Donor Data Import Complete"
+	@echo "--------------------------------------"
+
+
 living:
 	@echo ""
 	@echo "--------------------------------------"
