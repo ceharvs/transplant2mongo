@@ -48,7 +48,6 @@ args = parser.parse_args()
 # Path to data files
 path = 'data/'
 
-
 def clean_string(string):
     """Clean string and replace unnecessary values"""
     # Replace unnecessary apostrophes
@@ -61,36 +60,14 @@ def clean_string(string):
     string = string.replace("<", "").replace(">", "")
     return string
 
-
-def import_header():
-    """Read in information from the header file"""
-    # Read in the htm file with the headers
-    head = []
-    with open(path+args.file_name+'.htm') as header_file:
-        # Find the start of the code body
-        for line in header_file:
-            if line.strip() == "<tbody>":
-                break
-        # Continue processing until the end of the body
-        for line in header_file:
-            if line.strip() == "</tbody>":
-                break
-            # Extract the relevant column header information
-            head.append(line.split('</th><td>')[1].split('</td><td>')[0])
-    return head
-
-
 # Set up connection to MongoDB
 db = pymongo.MongoClient(args.client)[args.database]
 collection = 'db.'+args.collection_name
 
 # Check the length of the file
-filename = path + args.file_name + ".DAT"
+filename = path + args.file_name + ".csv"
 num_lines = subprocess.check_output(['wc', '-l', filename]).decode("utf-8").split(filename)[0].strip()
 print("    Importing %s lines ..." % str(num_lines))
-
-# Import from the header file
-header = import_header()
 
 # Establish counting and lists for data imports
 imported_file_count = 0
@@ -101,7 +78,9 @@ progress = tqdm(total=int(num_lines), desc="    Progress")
 
 # Read in the htm file with the headers
 with codecs.open(filename, "rb", encoding="utf-8", errors="ignore") as f:
-    reader = csv.reader(f, delimiter='\t', quotechar='"')
+    reader = csv.reader(f, delimiter=',', quotechar='"')
+
+    header = next(reader, None)
 
     # Put all rows into MongoDB
     for row in reader:
